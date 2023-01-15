@@ -1,5 +1,5 @@
 from tkinter import *
-import pyautogui
+import keyboard
 
 
 class BaguetteUi:
@@ -28,5 +28,5 @@ class BaguetteUi:
     def generate_window(self):
         self.canvas_value = Canvas(self.root, width=100, height=100, bg="SpringGreen2")
         self.fill_instructions(self)
-        self.root.bind("<Key>", self.on_key_press)
+        keyboard.add_hotkey('a', self.on_key_press, args=('a',))
         self.root.mainloop()

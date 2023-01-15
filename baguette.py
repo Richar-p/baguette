@@ -14,8 +14,8 @@ class Baguette:
         time_taken = round(time.time() - self.time, 2)  # rounding the long decimal float
         print("[TARGET] The key", key, " is pressed for", time_taken, 'seconds')
         if time_taken > 1:
-            pyautogui.write(self.choice)
             BaguetteUi(key, self).generate_window()
+            pyautogui.write(self.choice)
         return False  # stop detecting more key-releases
 
     @staticmethod
