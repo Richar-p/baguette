@@ -43,7 +43,7 @@ class AppManager:
             keyboard.Controller().type(accent)
 
             # Logs
-            print(f"Accent '{accent}' inséré à la place de '{self.last_vowel}'")
+            print(f"Accent '{accent}' replaced '{self.last_vowel}'")
 
             # Reset the last vowel
             self.last_vowel = None

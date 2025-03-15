@@ -11,10 +11,10 @@ class AccentWindow(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('Sélection d\'Accent')
+        self.setWindowTitle('Select an accent')
         self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)
         self.layout = QVBoxLayout()
-        self.label = QLabel('Appuyez sur un chiffre pour choisir un accent :')
+        self.label = QLabel('Press an number to get the accent :')
         self.layout.addWidget(self.label)
 
         self.accents = DICTIONNARY[self.vowel]
