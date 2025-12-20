@@ -1,9 +1,16 @@
 from accent_window import AccentWindow
 from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import QTimer
 from signal_emitter import SignalEmitter
 from pynput import keyboard
 import sys
 import time
+try:
+    from Xlib import display, X
+    from Xlib.error import BadWindow
+    XLIB_AVAILABLE = True
+except ImportError:
+    XLIB_AVAILABLE = False
 
 # UI Launching and unicity gestion
 class AppManager:
@@ -22,10 +29,28 @@ class AppManager:
         if self.accent_window_open:
             return
 
+        # Save the currently focused window before showing our window
+        saved_window = None
+        if XLIB_AVAILABLE:
+            try:
+                d = display.Display()
+                saved_window = d.get_input_focus().focus
+            except:
+                pass  # If we can't get the window, just continue
+
         # Create a new window if there is no one openned
         self.window = AccentWindow(self.insert_accent, self.last_vowel)
         self.window.show()
         self.accent_window_open = True
+
+        # Restore focus to the previously active window
+        if XLIB_AVAILABLE and saved_window:
+            try:
+                d = display.Display()
+                saved_window.set_input_focus(X.RevertToParent, X.CurrentTime)
+                d.flush()
+            except:
+                pass  # If restore fails, just continue
 
     # Method to insert an accent when triggers are on
     # This method are passed as "accent_callback" into the AccentWindow class
@@ -54,4 +79,11 @@ class AppManager:
     def run(self):
         # The PyQT app are not stopping when there is no windows openned
         self.app.setQuitOnLastWindowClosed(False)
+        
+        # Set up a timer to allow Python signal handlers to run
+        # This enables CTRL+C to work properly
+        timer = QTimer()
+        timer.timeout.connect(lambda: None)  # Just let Python process signals
+        timer.start(100)  # Check every 100ms
+        
         self.app.exec()
