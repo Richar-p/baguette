@@ -31,12 +31,14 @@ class AppManager:
 
         # Save the currently focused window before showing our window
         saved_window = None
+        d = None
         if XLIB_AVAILABLE:
             try:
                 d = display.Display()
                 saved_window = d.get_input_focus().focus
-            except:
-                pass  # If we can't get the window, just continue
+            except Exception as e:
+                print(f"Warning: Could not get focused window: {e}")
+                d = None  # Clear display if we had an error
 
         # Create a new window if there is no one openned
         self.window = AccentWindow(self.insert_accent, self.last_vowel)
@@ -44,13 +46,12 @@ class AppManager:
         self.accent_window_open = True
 
         # Restore focus to the previously active window
-        if XLIB_AVAILABLE and saved_window:
+        if XLIB_AVAILABLE and saved_window and d:
             try:
-                d = display.Display()
                 saved_window.set_input_focus(X.RevertToParent, X.CurrentTime)
                 d.flush()
-            except:
-                pass  # If restore fails, just continue
+            except Exception as e:
+                print(f"Warning: Could not restore focus: {e}")
 
     # Method to insert an accent when triggers are on
     # This method are passed as "accent_callback" into the AccentWindow class
