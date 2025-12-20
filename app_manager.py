@@ -45,13 +45,18 @@ class AppManager:
         self.window.show()
         self.accent_window_open = True
 
-        # Restore focus to the previously active window
+        # Restore focus to the previously active window after a short delay
+        # This allows Qt to fully process the window show event first
         if XLIB_AVAILABLE and saved_window and d:
-            try:
-                saved_window.set_input_focus(X.RevertToParent, X.CurrentTime)
-                d.flush()
-            except Exception as e:
-                print(f"Warning: Could not restore focus: {e}")
+            def restore_focus():
+                try:
+                    saved_window.set_input_focus(X.RevertToParent, X.CurrentTime)
+                    d.flush()
+                except Exception as e:
+                    print(f"Warning: Could not restore focus: {e}")
+            
+            # Use QTimer to delay focus restoration by 50ms
+            QTimer.singleShot(50, restore_focus)
 
     # Method to insert an accent when triggers are on
     # This method are passed as "accent_callback" into the AccentWindow class
