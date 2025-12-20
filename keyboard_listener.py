@@ -1,5 +1,7 @@
 import time
 import os
+import threading
+import select
 from dictionnary import DICTIONNARY
 
 # Try to import evdev for Wayland support
@@ -78,14 +80,11 @@ class KeyboardListener:
         self.keyboards = keyboards
         
         # Start listening in background thread
-        import threading
         self.evdev_thread = threading.Thread(target=self._evdev_loop, daemon=True)
         self.evdev_thread.start()
     
     def _evdev_loop(self):
         """Main loop for evdev - reads from all keyboard devices"""
-        import select
-        
         # Map of device fd to device
         devices_map = {dev.fd: dev for dev in self.keyboards}
         
@@ -167,7 +166,7 @@ class KeyboardListener:
             current_time = time.time()
 
             if (current_time - self.last_vowel_time) >= self.vowel_delay_threshold:
-                print("Espace appuyé trop rapidement après la voyelle, ignorer.")
+                print("Espace appuyé trop lentement après la voyelle, ignorer.")
                 return
             
             if self.app_manager.last_vowel:
@@ -186,7 +185,7 @@ class KeyboardListener:
             current_time = time.time()
 
             if (current_time - self.last_vowel_time) >= self.vowel_delay_threshold:
-                print("Espace appuyé trop rapidement après la voyelle, ignorer.")
+                print("Espace appuyé trop lentement après la voyelle, ignorer.")
                 return
             
             if self.app_manager.last_vowel:
