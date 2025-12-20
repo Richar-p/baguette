@@ -14,6 +14,10 @@ except ImportError:
 
 # UI Launching and unicity gestion
 class AppManager:
+    # Focus restoration delay in milliseconds
+    # This allows Qt event loop to process window show before restoring focus
+    FOCUS_RESTORE_DELAY_MS = 50
+    
     def __init__(self):
         
         self.app                = QApplication(sys.argv)    # Application itself
@@ -49,14 +53,18 @@ class AppManager:
         # This allows Qt to fully process the window show event first
         if XLIB_AVAILABLE and saved_window and d:
             def restore_focus():
+                # Validate captured variables are still valid
+                if saved_window is None or d is None:
+                    return
                 try:
                     saved_window.set_input_focus(X.RevertToParent, X.CurrentTime)
                     d.flush()
                 except Exception as e:
                     print(f"Warning: Could not restore focus: {e}")
             
-            # Use QTimer to delay focus restoration by 50ms
-            QTimer.singleShot(50, restore_focus)
+            # Use QTimer to delay focus restoration
+            # This allows the Qt event loop to process the window show event
+            QTimer.singleShot(self.FOCUS_RESTORE_DELAY_MS, restore_focus)
 
     # Method to insert an accent when triggers are on
     # This method are passed as "accent_callback" into the AccentWindow class
