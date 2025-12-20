@@ -18,7 +18,7 @@ class AccentWindow(QWidget):
             QtCore.Qt.WindowType.WindowDoesNotAcceptFocus
         )
         self.layout = QVBoxLayout()
-        self.label = QLabel('Press an number to get the accent :')
+        self.label = QLabel('Press a number to get the accent :')
         self.layout.addWidget(self.label)
 
         self.accents = DICTIONNARY[self.vowel]
@@ -36,6 +36,6 @@ class AccentWindow(QWidget):
 
     def closeEvent(self, event):
         self.accent_callback(None)
-        print('accent callbacknn ok')
+        print('accent callback ok')
         event.accept()
         print('event ok')
