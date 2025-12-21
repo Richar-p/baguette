@@ -1,3 +1,11 @@
+# Why is this project DEAD?
+
+## Wayland.
+
+I didn't manage to make it work properly on Wayland, clipboard insertion is really not user friendly. I stop trying to dev it, and i put it as archive.
+
+___________
+
 # BAGUETTE
 
 The project is to have a tool easier to use than Compose, for typing accent on linux with qwerty keyboard.
