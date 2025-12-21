@@ -1,2 +1,4 @@
 pynput
 pyqt6
+python-xlib
+evdev
